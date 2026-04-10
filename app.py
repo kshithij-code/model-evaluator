@@ -22,6 +22,8 @@ st.header("✏️ Input")
 
 question = st.text_area("Question")
 reference = st.text_area("Reference Answer")
+
+
 st.subheader("📄 Student Answer")
 
 upload_option = st.radio(
@@ -29,16 +31,20 @@ upload_option = st.radio(
     ["Type Answer", "Upload Image (OCR)"]
 )
 
-student = ""
+# Initialize session state
+if "student_text" not in st.session_state:
+    st.session_state.student_text = ""
 
 if upload_option == "Type Answer":
-    student = st.text_area("Student Answer")
+    st.session_state.student_text = st.text_area(
+        "Student Answer",
+        value=st.session_state.student_text
+    )
 
 else:
     uploaded_file = st.file_uploader("Upload Answer Image", type=["png", "jpg", "jpeg"])
 
     if uploaded_file is not None:
-        # Save temp image
         with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
             tmp.write(uploaded_file.read())
             temp_path = tmp.name
@@ -47,11 +53,18 @@ else:
             with st.spinner("Running OCR..."):
                 extracted_text = extract_text_from_image(temp_path)
 
+            st.session_state.student_text = extracted_text
             st.success("OCR Complete ✅")
 
-            student = extracted_text
+    # Always show editable box
+    st.session_state.student_text = st.text_area(
+        "Extracted / Editable Answer",
+        value=st.session_state.student_text,
+        height=200
+    )
 
-            st.text_area("Extracted Answer", value=student, height=200)
+# Final student variable
+student = st.session_state.student_text
 total_marks = st.number_input("Total Marks", min_value=1.0, value=10.0)
 
 run = st.button("🚀 Evaluate")
@@ -61,6 +74,7 @@ run = st.button("🚀 Evaluate")
 # -------------------------
 if run:
     if not question or not reference or not student:
+        print("student:", student)
         st.warning("Please fill all fields")
     else:
         st.header("📊 Results")
