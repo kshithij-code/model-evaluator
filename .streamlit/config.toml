@@ -1,6 +1,6 @@
 [theme]
-primaryColor="#6366F1"            # Indigo
-backgroundColor="#0E1117"         # Dark background
-secondaryBackgroundColor="#1E1E2E"
-textColor="#FFFFFF"
+primaryColor="#D4AF37"
+backgroundColor="#1B1F1A"           # Dark olive tone
+secondaryBackgroundColor="#2A2F28"
+textColor="#E6E6E6"
 font="sans serif"
