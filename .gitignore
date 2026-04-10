@@ -1,3 +1,5 @@
 .venv
+fenv
 saved_models
+
 __pycache__
